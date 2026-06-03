@@ -8,6 +8,227 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/dashboard.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* ========== ADDITIONAL ANIMATIONS & HOVER EFFECTS ========== */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes fadeInRight {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -200% 0;
+      }
+      100% {
+        background-position: 200% 0;
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4);
+      }
+      70% {
+        box-shadow: 0 0 0 8px rgba(79, 70, 229, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(79, 70, 229, 0);
+      }
+    }
+
+    /* Panel animations */
+    .panel {
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.5s ease-out;
+      animation-fill-mode: both;
+    }
+
+    .panel:nth-child(1) { animation-delay: 0.05s; }
+    .panel:nth-child(2) { animation-delay: 0.1s; }
+    .panel:nth-child(3) { animation-delay: 0.15s; }
+
+    .panel:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Filter section */
+    .panel:first-child {
+      animation: fadeInLeft 0.4s ease-out;
+    }
+
+    .panel-header select {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .panel-header select:hover {
+      border-color: var(--primary);
+      background: #fff;
+    }
+
+    .panel-header select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+      outline: none;
+    }
+
+    /* Chart container */
+    canvas {
+      transition: all 0.3s ease;
+    }
+
+    .panel:hover canvas {
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
+    }
+
+    /* Table styling */
+    .data-table tbody tr {
+      transition: all 0.2s ease;
+      animation: fadeInRight 0.3s ease-out;
+      animation-fill-mode: both;
+    }
+
+    .data-table tbody tr:nth-child(1) { animation-delay: 0.02s; }
+    .data-table tbody tr:nth-child(2) { animation-delay: 0.04s; }
+    .data-table tbody tr:nth-child(3) { animation-delay: 0.06s; }
+    .data-table tbody tr:nth-child(4) { animation-delay: 0.08s; }
+    .data-table tbody tr:nth-child(5) { animation-delay: 0.10s; }
+
+    .data-table tbody tr:hover {
+      background: rgba(124, 58, 237, 0.05);
+      transform: translateX(5px);
+    }
+
+    .data-table td, .data-table th {
+      transition: all 0.2s ease;
+    }
+
+    /* Badge styling enhancement */
+    .badge-pill {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+
+    .status-pill {
+      background: white;
+      padding: 10px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .badge-pill.ok { 
+      background: rgba(16, 185, 129, 0.15); 
+      color: #10b981;
+    }
+
+    .badge-pill.warn { 
+      background: rgba(245, 158, 11, 0.15); 
+      color: #f59e0b;
+    }
+
+    .badge-pill.err { 
+      background: rgba(239, 68, 68, 0.15); 
+      color: #ef4444;
+    }
+
+    .badge-pill:hover {
+      transform: scale(1.05);
+    }
+
+    .badge-pill.ok:hover { background: rgba(16, 185, 129, 0.25); }
+    .badge-pill.warn:hover { background: rgba(245, 158, 11, 0.25); }
+    .badge-pill.err:hover { background: rgba(239, 68, 68, 0.25); }
+
+    /* Row count badge */
+    #rowCount {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    #rowCount:hover {
+      transform: scale(1.05);
+      background: rgba(16, 185, 129, 0.25);
+    }
+
+    /* Table loading state */
+    #historyTable td[colspan="4"] {
+      text-align: center;
+      color: var(--muted);
+      padding: 40px;
+      animation: shimmer 2s linear infinite;
+      background: linear-gradient(90deg, rgba(124,58,237,0), rgba(124,58,237,0.05), rgba(124,58,237,0));
+      background-size: 200% 100%;
+    }
+
+    /* Scrollbar styling */
+    .table-wrap::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .table-wrap::-webkit-scrollbar-track {
+      background: var(--border);
+      border-radius: 10px;
+    }
+
+    .table-wrap::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 10px;
+    }
+
+    .table-wrap::-webkit-scrollbar-thumb:hover {
+      background: var(--primary-dark);
+    }
+  </style>
 </head>
 <body>
   <div class="app-shell">
@@ -34,7 +255,10 @@
           <p class="muted">Lihat dan analisis data historis dari semua sensor.</p>
         </div>
         <div class="topbar-actions">
-          <div class="status-pill"><span class="dot online"></span> Terhubung</div>
+          <div class="status-pill">
+            <span class="dot online"></span>
+            <span style="color: #1f2937">Terhubung</span>
+          </div>
           <div class="avatar">U</div>
         </div>
       </header>
@@ -84,7 +308,7 @@
               </tr>
             </thead>
             <tbody id="historyTable">
-              <tr><td colspan="4" style="text-align:center;color:var(--muted)">Memuat data...</td></tr>
+              <tr><td colspan="4" style="text-align:center;color:var(--muted)">Memuat data...<\/td></tr>
             </tbody>
           </table>
         </div>
@@ -108,26 +332,69 @@
               data: data.chart?.suhu || [],
               borderColor: '#4f46e5',
               backgroundColor: 'rgba(79,70,229,.1)',
-              fill: true, tension: .4, borderWidth: 2, pointRadius: 4
+              fill: true, tension: .4, borderWidth: 2, pointRadius: 4,
+              pointBackgroundColor: '#4f46e5',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              pointHoverRadius: 6,
+              pointHoverBackgroundColor: '#7c3aed'
             },
             {
               label: 'Kelembapan (%)',
               data: data.chart?.kelembapan || [],
               borderColor: '#06b6d4',
               backgroundColor: 'rgba(6,182,212,.08)',
-              fill: true, tension: .4, borderWidth: 2, pointRadius: 4
+              fill: true, tension: .4, borderWidth: 2, pointRadius: 4,
+              pointBackgroundColor: '#06b6d4',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              pointHoverRadius: 6,
+              pointHoverBackgroundColor: '#0891b2'
             }
           ]
         },
         options: {
           responsive: true,
+          maintainAspectRatio: true,
+          interaction: {
+            mode: 'index',
+            intersect: false,
+          },
           plugins: {
-            legend: { position: 'bottom', labels: { boxWidth: 10, usePointStyle: true, padding: 20 } },
-            tooltip: { backgroundColor: 'rgba(15,23,42,0.9)', titleColor: '#94a3b8', bodyColor: '#f1f5f9', padding: 12, cornerRadius: 8 }
+            legend: { 
+              position: 'bottom', 
+              labels: { 
+                boxWidth: 10, 
+                usePointStyle: true, 
+                padding: 20,
+                color: '#64748b'
+              } 
+            },
+            tooltip: { 
+              backgroundColor: 'rgba(15,23,42,0.95)', 
+              titleColor: '#94a3b8', 
+              bodyColor: '#f1f5f9', 
+              padding: 12, 
+              cornerRadius: 8,
+              borderColor: '#4f46e5',
+              borderWidth: 1
+            }
           },
           scales: {
-            y: { grid: { color: 'rgba(148,163,184,0.1)' }, ticks: { color: '#94a3b8' } },
-            x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+            y: { 
+              grid: { color: 'rgba(148,163,184,0.1)' }, 
+              ticks: { color: '#94a3b8' } 
+            },
+            x: { 
+              grid: { display: false }, 
+              ticks: { color: '#94a3b8' } 
+            }
+          },
+          elements: {
+            line: {
+              borderJoin: 'round',
+              borderCap: 'round'
+            }
           }
         }
       });
