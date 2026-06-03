@@ -30,7 +30,7 @@
       font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
     }
 
-    /* ========== ANIMATIONS ========== */
+    /* ========== ANIMATIONS YANG DITINGKATKAN ========== */
     @keyframes fadeIn {
       from {
         opacity: 0;
@@ -106,6 +106,24 @@
       }
     }
 
+    /* ========== LOADING ANIMATION BARU ========== */
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes blinkSuccess {
+      0% { background-color: rgba(16,185,129,0); }
+      50% { background-color: rgba(16,185,129,0.15); }
+      100% { background-color: rgba(16,185,129,0); }
+    }
+
+    @keyframes shakeField {
+      0%,100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
     /* ========== LOGIN PAGE STYLES ========== */
     .login-body {
       min-height: 100vh;
@@ -120,7 +138,7 @@
       overflow: hidden;
     }
 
-    /* Floating orbs background */
+    /* Floating orbs background - animasi lebih smooth */
     .login-body::before {
       content: '';
       position: absolute;
@@ -145,6 +163,15 @@
       animation: rotateBg 25s linear infinite reverse;
     }
 
+    /* Particle tambahan */
+    .orb-particle {
+      position: absolute;
+      background: rgba(124,58,237,0.08);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: float 12s infinite ease-in-out;
+    }
+
     .login-wrapper {
       width: 100%;
       max-width: 980px;
@@ -157,6 +184,12 @@
       animation: fadeIn 0.6s ease-out;
       position: relative;
       z-index: 1;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .login-wrapper:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 35px 90px rgba(0,0,0,0.5);
     }
 
     .login-card {
@@ -253,6 +286,13 @@
     .login-form input[type="email"]:hover,
     .login-form input[type="password"]:hover {
       border-color: var(--primary-light);
+    }
+
+    /* Animasi error pada input */
+    .input-error {
+      border-color: var(--danger) !important;
+      background-color: #fff5f5 !important;
+      animation: shakeField 0.3s ease-in-out 0s 2;
     }
 
     .form-row {
@@ -362,25 +402,92 @@
       transform: translateY(0px);
     }
 
+    /* ========== LOADING STATE PADA BUTTON ========== */
+    .btn-primary:disabled {
+      opacity: 0.8;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-loader {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.7s linear infinite;
+    }
+
+    .btn-loading {
+      pointer-events: none;
+      position: relative;
+    }
+
+    .btn-loading::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      animation: shimmer 1.2s infinite;
+      background-size: 200% 100%;
+      border-radius: 10px;
+    }
+
     .btn-block {
       display: block;
       width: 100%;
     }
 
+    /* ========== FORM MESSAGE DENGAN ANIMASI ========== */
     .form-message {
       margin-top: 14px;
       font-size: 13px;
       text-align: center;
       min-height: 18px;
       animation: fadeIn 0.3s ease-out;
+      padding: 8px 12px;
+      border-radius: 30px;
+      transition: all 0.3s ease;
     }
 
     .form-message.error {
       color: var(--danger);
+      background: rgba(239,68,68,0.08);
     }
 
     .form-message.success {
       color: var(--success);
+      background: rgba(16,185,129,0.08);
+      animation: blinkSuccess 0.6s ease;
+    }
+
+    .form-message.loading {
+      color: var(--primary);
+      background: rgba(124,58,237,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .mini-spinner {
+      width: 12px;
+      height: 12px;
+      border: 2px solid rgba(124,58,237,0.3);
+      border-radius: 50%;
+      border-top-color: var(--primary);
+      animation: spin 0.6s linear infinite;
+      display: inline-block;
     }
 
     .form-footer {
@@ -514,10 +621,15 @@
   </style>
 </head>
 <body class="login-body">
+  <!-- Decorative floating particles -->
+  <div class="orb-particle" style="width: 150px; height: 150px; top: 10%; left: -50px; animation-duration: 14s;"></div>
+  <div class="orb-particle" style="width: 200px; height: 200px; bottom: 5%; right: -60px; animation-duration: 18s; background: rgba(6,182,212,0.06);"></div>
+  <div class="orb-particle" style="width: 100px; height: 100px; top: 80%; left: 5%; animation-duration: 11s;"></div>
+
   <div class="login-wrapper">
     <div class="login-card">
       <div class="login-brand">
-        <img src="img/logo.png" alt="Logo" />
+        <img src="img/logo.png" alt="Logo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27%237c3aed%27%3E%3Cpath d=%27M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5%27/%3E%3C/svg%3E'" />
         <h1>Selamat Datang Kembali</h1>
         <p>Masuk untuk mengakses dashboard monitoring Anda</p>
       </div>
